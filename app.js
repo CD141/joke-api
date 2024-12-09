@@ -1,7 +1,10 @@
 
+const path = require('path')
 const express = require('express')
 const app = express()
 const port = 3010
+
+const root = path.join(__dirname, 'public')
 
 const randomJoke = [
     {
@@ -33,17 +36,15 @@ const randomJoke = [
 
 app.use(express.json())
 
-app.get('/', (request, response) => {
-    response.send('Hello World')
-})
+app.use(express.static('public'))
 
-app.get('/test', (request, response) => {
-    response.send('Hello from test route')
+app.get('/', (request, response) => {
+    response.sendFile('index.html', {root})
 })
 
 app.get('/api/v1/random-joke', (request, response) => {
-    const randomNumber = Math.floor(Math.random() * 10) + 1
-    response.send({ randomNumber })
+    const r = Math.floor(Math.random() * 5)
+    response.send(randomJoke[r])
 })
 
 app.listen(port, () => console.log(`http://localhost:${port}/`))
